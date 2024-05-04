@@ -2,7 +2,7 @@
 
 ## Overview
 In this exercise you will learn about building a P2SH wrapped P2WSH transaction that spends a 2-of-2 multisig redeemscript. This is one
-of the most rudimentary yet involved transaction building process where you will learn how to find a sighash, create ecdsa signatures, create the right `script_sig` and the `witness` to pass validation of the transaction. Even though P2SH-P2WSH transactions are less optimal than direct P2WSH transactions, this exercise will show you how to correctly compute all the different parts of a transaction.
+of the most rudimentary yet involved transaction building process where you will learn how to calculate a sighash, create ecdsa signatures, create the right `script_sig` and the `witness` to pass validation of the transaction. Even though P2SH-P2WSH transactions are less optimal than direct P2WSH transactions, this exercise will show you how to correctly compute all the different parts of a transaction.
 
 You can use any popular Bitcoin library in your language of choice to craft the transaction.
 
