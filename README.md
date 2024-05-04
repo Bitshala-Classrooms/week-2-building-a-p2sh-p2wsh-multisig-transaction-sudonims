@@ -1,24 +1,20 @@
-# Bitcoin Protocol Development - Week 1: Interacting with a Bitcoin Node
+# Bitcoin Protocol Development - Week 2: Building a P2SH-P2WSH Multisig Transaction
 
 ## Overview
-This week, you'll learn how to use Bitcoin Core's RPC to interact with a running Bitcoin node. The tasks involve connecting to a Bitcoin Core RPC daemon, creating, and broadcasting a transaction. You'll need a Bitcoin node running in `regtest` mode on your local machine to test your solution. You can use `bash`, `javascript`, `python`, or `rust` for your implementation.
+In this exercise you will learn about building a P2SH wrapped P2WSH transaction that spends a 2-of-2 multisig redeemscript. This is one
+of the most rudimentary yet involved transaction building process where you will learn how to find a sighash, create ecdsa signatures, create the right `script_sig` and the `witness` to pass validation of the transaction. Even though P2SH-P2WSH transactions are less optimal than direct P2WSH transactions, this exercise will show you how to correctly compute all the different parts of a transaction.
 
-A [docker-compose](./docker-compose.yaml) file is provided to help you launch a Bitcoin node in `regtest` mode locally.
-
-You can also use the [bitcoin.conf](./bitcoin.conf) file to start a local regtest node with your locally built binaries (recommended).
+You can use any popular Bitcoin library in your language of choice to craft the transaction.
 
 ## Objective
-Successfully send a Payment + OP_Return Transaction.
+Successfully create a signed P2SH-P2WSH multisig transaction.
 
 Your tasks are to:
-- Connect to a Bitcoin node in `regtest` mode using RPC.
-- Create and load a wallet named “testwallet.”
-- Generate an address from the wallet.
-- Mine blocks to that address.
-- Send 100 BTC to a provided address.
-- Include a second output with an OP_RETURN message: “We are all Satoshi!!”
-- Set the fee rate to 21 sats/vB.
-- Output the transaction ID (txid) to an `out.txt` file.
+- Craft a transaction with the [requirements](#requirements).
+- Calculate the signhash of the unsigned transaction and compute ecdsa signatures with both private keys.
+- Correctly create the `script_sig` of the transaction from the given `redeem_script`.
+- Correctly create the `witness` stack of the transaction for a valid multisig witness.
+- Write the transaction hex to `out.txt`.
 
 Place your solution in the appropriate directory based on your chosen language:
 - [bash](./bash/solution.sh)
@@ -27,16 +23,23 @@ Place your solution in the appropriate directory based on your chosen language:
 - [rust](./rust/src/main.rs)
 
 ## Requirements
-### Input
-Create a transaction with the following outputs:
-- **Output 1**:
-  - Address: `bcrt1qq2yshcmzdlznnpxx258xswqlmqcxjs4dssfxt2`
-  - Amount: 100 BTC
-- **Output 2**:
-  - Data: "We are all Satoshi!!" (This should be an `OP_RETURN` output with the binary encoding of the string.)
+### Transaction Spec
+- Private Key 1: `39dc0a9f0b185a2ee56349691f34716e6e0cda06a7f9707742ac113c4e2317bf`
+- Private Key 2: `5077ccd9c558b7d04a81920d38aa11b4a9f9de3b23fab45c3ef28039920fdd6d`
+- Redeem Script (ASM):  `OP_2 032ff8c5df0bc00fe1ac2319c3b8070d6d1e04cfbf4fedda499ae7b775185ad53b 039bbc8d24f89e5bc44c5b0d1980d6658316a6b2440023117c3c03a4975b04dd56 OP_2 OP_CHECKMULTISIG`
+- Redeem Script (HEX):  `5221032ff8c5df0bc00fe1ac2319c3b8070d6d1e04cfbf4fedda499ae7b775185ad53b21039bbc8d24f89e5bc44c5b0d1980d6658316a6b2440023117c3c03a4975b04dd5652ae`
+- Transaction should contain exactly 1 input with:
+    - Outpoint:
+        - Hash: `0000000000000000000000000000000000000000000000000000000000000000`
+        - Index: `0`
+    - Sequence: `0xffffffff`
+- Transaction should contain exactly 1 output with:
+    - Value: `0.001`
+    - Address: `325UUecEQuyrTd28Xs2hvAxdAjHM7XzqVF`
+- Locktime: `0`
 
 ### Output
-After creating and broadcasting the transaction, save the `txid` to [out.txt](./out.txt).
+After creating and the transaction, save the serialized transaction hex to [out.txt](./out.txt).
 
 ## Execution
 To test your solution locally:
